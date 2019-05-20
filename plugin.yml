@@ -1,0 +1,12 @@
+name: TestPlugin
+main: net.drakune.TestPlugin
+version: 0.1
+commands:
+   testen:
+      description: Nur zum Testen!
+      permission: TestPlugin.basic
+      permission-message: Keine berechtigung!
+   toggleIP:
+      description: Schaltet IP Information um!
+      permission: TestPlugin.basic
+      permission-message: Keine berechtigung!
