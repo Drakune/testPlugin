@@ -2,11 +2,24 @@ name: TestPlugin
 main: net.drakune.TestPlugin
 version: 0.1
 commands:
-   testen:
+   spawn:
       description: Nur zum Testen!
       permission: TestPlugin.basic
       permission-message: Keine berechtigung!
-   toggleIP:
+   toggleip:
       description: Schaltet IP Information um!
       permission: TestPlugin.basic
       permission-message: Keine berechtigung!
+   speed:
+      description: Setzt Fluggeschwindigkeit
+      permission: TestPlugin.basic
+      permission-message: Keine Berechtigung!
+   tag:
+      description: Setzt die Zeit auf Tag
+      permission: TestPlugin.basic
+      permission-message: Keine Berechtigung!
+   nacht:
+      description: Setzt die Zeit auf Nacht
+      permission: TestPlugin.basic
+      permission-message: Keine Berechtigung!
+   
