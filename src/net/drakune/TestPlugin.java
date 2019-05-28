@@ -1,19 +1,19 @@
 package net.drakune;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.material.Wool;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TestPlugin extends JavaPlugin implements Listener {
 
-	private Player me;
-	private boolean toggleIP;
+	private boolean toggleIP = true;
 	private TestPluginCommandExecutor myExecutor;
 	
 	public TestPlugin() {
-		me = Bukkit.getPlayer("DR4KUN3");
-		toggleIP = true;
 	}
 	
 	public void onEnable() {
@@ -29,10 +29,6 @@ public class TestPlugin extends JavaPlugin implements Listener {
 	
 	public void onDisable() {
 		this.getLogger().info("Das Plugin wurde erfolgreich ausgeschaltet");
-	}
-
-	public Player getMe() {
-		return me;
 	}
 
 	public boolean getToggleIP() {

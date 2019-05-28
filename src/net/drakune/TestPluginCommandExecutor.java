@@ -14,40 +14,50 @@ import org.bukkit.potion.PotionEffectType;
 
 public class TestPluginCommandExecutor implements CommandExecutor {
 	
-	@SuppressWarnings("unused")
 	private TestPlugin plugin;
-	private Player me;
 	private boolean toggleIP;
 
 	public TestPluginCommandExecutor(TestPlugin plugin) {
 		this.plugin = plugin;
-		this.me = plugin.getMe();
 		this.toggleIP = plugin.getToggleIP();
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(command.getName().equalsIgnoreCase("toggleip") && sender instanceof Player) {
-			if(args.length > 1) {
-				sender.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Zu viele Argumente!");
+			Player player = (Player) sender;
+			if(!(sender.equals(Bukkit.getPlayer("DR4KUN3")))) {
+				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Du bist nicht der Owner des Servers!");
 				return true;
 			}
-			if(args.length < 1) {
-				sender.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Zu wenig Argumente!");
+			if(args.length == 0) {
+				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Der Status der IP Anzeige ist auf "+toggleIP+" gestellt!");
+				return true;
+			}
+			if(args.length > 1) {
+				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Zu viele Argumente!");
 				return true;
 			}
 			if(args[0].equals("true")) {
+				if(toggleIP) {
+					player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"IP-Anzeige ist schon auf true gestellt!");
+					return true;
+				}
 				toggleIP = true;
-				sender.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4]"+ChatColor.YELLOW+ChatColor.BOLD+" IP's werden nun angezeigt");
-				return false;
+				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"IP's werden nun angezeigt!");
+				return true;
 			}
 			if(args[0].equals("false")) {
+				if(!(toggleIP)) {
+					player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"IP-Anzeige ist schon auf false gestellt!");
+					return true;
+				}
 				toggleIP = false;
-				sender.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4]"+ChatColor.YELLOW+ChatColor.BOLD+" IP's werden nun nicht mehr angezeigt");
-				return false;
+				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"IP's werden nun nicht mehr angezeigt!");
+				return true;
 			}
 			else {
-				sender.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Falsche Argumente! (true/false)");
+				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Falsche Argumente!");
 				return true;
 			}
 		}
@@ -55,16 +65,19 @@ public class TestPluginCommandExecutor implements CommandExecutor {
 			Player player = (Player) sender;
 			player.teleport(new Location(Bukkit.getWorld("world"),-116.5,4,129.5));
 			player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Du wurdest zum Spawn teleportiert!");
-			if(me.isOnline() && toggleIP == true) {
-				me.sendMessage(ChatColor.YELLOW+"Spieler "+ChatColor.RED+player.getName()+ChatColor.YELLOW+" mit der IP "+player.getAddress()+" nutzte /testen!");
-			}
 			player.setHealth(20);
 			player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Du wurdest geheilt!");
 			player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 70, 0, true, false, false));
+			if(Bukkit.getPlayer("DR4KUN3").isOnline() && toggleIP == true) {
+				Bukkit.getPlayer("DR4KUN3").sendMessage(ChatColor.YELLOW+"Spieler "+ChatColor.RED+player.getName()+ChatColor.YELLOW+" mit der IP "+player.getAddress()+" nutzte /testen!");
+			}
+			else {
+				return true;
+			}
 			return true;
 		}
 		if(command.getName().equalsIgnoreCase("castlerush") && sender instanceof Player) {
-				
+			
 		}
 		if(command.getName().equalsIgnoreCase("tag")) {
 			Player player = (Player) sender;
@@ -73,7 +86,7 @@ public class TestPluginCommandExecutor implements CommandExecutor {
 			}
 			else {
 				Bukkit.getWorld("world").setTime(1000);
-				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Du hast die Zeit auf Tag gesetzt "+"("+Bukkit.getWorld("world").getTime()+")");
+				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Du hast die Zeit auf Tag gesetzt. "+"("+Bukkit.getWorld("world").getTime()+")");
 			}
 		}
 		if(command.getName().equalsIgnoreCase("nacht")) {
@@ -83,32 +96,62 @@ public class TestPluginCommandExecutor implements CommandExecutor {
 			}
 			else {
 				Bukkit.getWorld("world").setTime(14000);
-				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Du hast die Zeit auf Nacht gesetzt "+"("+Bukkit.getWorld("world").getTime()+")");
+				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Du hast die Zeit auf Nacht gesetzt. "+"("+Bukkit.getWorld("world").getTime()+")");
 			}
 		}
 		if(command.getName().equalsIgnoreCase("speed") && sender instanceof Player) {
-			/*  
-			 * WalkSpeed auch noch setzen lassen können mit z.B /speed laufen 10
-			 * FlySpeed dann dementsprechend mit /speed flug 10
-			 * 
-			 */
 			Player player = (Player) sender;
-			if(args.length > 1) {
+			if(args.length > 2) {
 				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Zu viele Argumente!");
 				return true;
 			}
-			if(args.length < 1) {
-				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Zu wenig Argumente! (1 bis 10)");
+			if(args.length < 2) {
+				if(args.length < 1) {
+					player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Zu wenig Argumente!");
+					return true;
+				}
+				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Zu wenig Argumente!");
 				return true;
 			}
-			if(Integer.parseInt(args[0]) > 10) {
-				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.RED+""+ChatColor.ITALIC+"Falsche Argumente! (1 bis 10)");
+			if(args[0].equals("flug")) {
+				if(Integer.parseInt(args[1]) <= 10) {
+					player.setFlySpeed(Float.parseFloat(args[1])/10);
+					player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Fluggeschwindigkeit wurde auf "+args[1]+" gesetzt.");
+					return true;
+				}
+				else {
+					if(args.length > 3) {
+						player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.ITALIC+"Zu viele Argumente!");
+						return true;
+					}
+					if(Integer.parseInt(args[1]) > 10) {
+						player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.ITALIC+"Maximale Geschwindigkeit von 10!");
+						return true;
+					}
+				}
+			}
+			if(args[0].equals("laufen")) {
+				if(Integer.parseInt(args[1]) <= 10) {
+					player.setWalkSpeed(Float.parseFloat(args[1])/10);
+					player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Laufgeschwindigkeit wurde auf "+args[1]+" gesetzt.");
+					return true;
+				}
+				else {
+					if(args.length > 3) {
+						player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.ITALIC+"Zu viele Argumente!");
+						return true;
+					}
+					if(Integer.parseInt(args[1]) > 10) {
+						player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.ITALIC+"Maximale Geschwindigkeit von 10!");
+						return true;
+					}
+				}
+			}
+			else {
+				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Falsche Argumente! (Flug/Laufen)");
 				return true;
 			}
-			if(Integer.parseInt(args[0]) <= 10) {
-				player.setFlySpeed(Float.parseFloat(args[0])/10);
-				player.sendMessage(ChatColor.BOLD+""+ChatColor.DARK_PURPLE+"[DR4] "+ChatColor.YELLOW+ChatColor.BOLD+"Fluggeschwindigkeit wurde auf "+args[0]+" gesetzt");
-			}
+			
 		}
 		return true;
 	}
